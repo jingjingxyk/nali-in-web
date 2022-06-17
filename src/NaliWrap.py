@@ -50,7 +50,7 @@ def match(message):
 def main():
     print("HTTP/1.0 200\r\n", end="")
 
-    print("content-type: application/javascript; charset=utf-8\r\n", end="")
+    print("content-type: application/json; charset=utf-8\r\n", end="")
     # print("Content-Type:text/html;charset=utf-8", end="\r\n")
     print('\r\n\r\n', end='')
     req = sys.stdin.readline()
