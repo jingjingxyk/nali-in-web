@@ -31,7 +31,7 @@ def cmd_exec(cmd):
 
 def match(message):
     search = re.search("(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", message)
-    result = {}
+    result = dict()
     if search:
         ip = search.group(1)
         cmd = f"{project_dir}/tools/nali-linux-amd64-v0.4.2 {ip}"
