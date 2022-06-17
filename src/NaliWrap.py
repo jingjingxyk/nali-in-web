@@ -71,7 +71,7 @@ def main():
         result['origin'] = info['origin']
         result["message"] = "ok"
 
-    print(json.dumps(result, ensure_ascii=False), end="\r\n\r\n")
+    print(json.dumps(result, ensure_ascii=False)+"\r\n\r\n", end='')
 
 
 if __name__ == '__main__':
