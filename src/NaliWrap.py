@@ -74,7 +74,7 @@ def main():
 
 
 if __name__ == '__main__':
-    project_dir = os.path.abspath(os.getcwd())
+    project_dir = os.path.abspath(os.path.dirname(__file__)+"/../")
     try:
         process_ids = 'ppid:{},pid:{},uid:{}'.format(os.getppid(), os.getpid(), os.getuid())
         request_time = ":request_time:" + datetime.strftime(datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ")

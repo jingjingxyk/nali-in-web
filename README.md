@@ -22,6 +22,12 @@ http://127.0.0.1:8080/?ip=2.2.2.2
 }
 ```
 
+## 批量获取 ip地址信息
+
+```
+python3 src/NaliBatch.py
+
+```
 ## 更新 IP 数据库
 ```shell 
 nali-linux-amd64-v0.4.2 update 

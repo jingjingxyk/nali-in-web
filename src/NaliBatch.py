@@ -12,12 +12,11 @@ import re
 
 def get_cmd(line):
     result = re.search('(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', line)
-    cmd=None
+    cmd = None
     if result is not None:
         ip = result.group(1)
         if ip is not None:
-            current_dir = os.getcwd()
-            cmd = f'{current_dir}/nali-linux-amd64-v0.4.2 {ip}'
+            cmd = f'{project_dir}/tools/nali-linux-amd64-v0.4.2 {ip}'
     return cmd
 
 
@@ -27,11 +26,12 @@ def execute_one(line):
     if cmd:
         ret = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8",
                              timeout=30)
-        if ret.returncode == 0:
-            res = ret.stdout
+        if ret.returncode == 0 and ret.stdout:
+            res = ret.stdout.strip()
         else:
             print("error:", ret.stderr)
-    return res.strip()
+    return res
+
 
 # 并发编程
 def execute_all(lines):
@@ -48,6 +48,7 @@ def execute_all(lines):
 
 
 if __name__ == '__main__':
+    project_dir = os.path.abspath(os.path.dirname(__file__) + "/../")
     start_time = time.perf_counter()
     ips = [
         "114.114.114.114",
@@ -67,7 +68,7 @@ if __name__ == '__main__':
         "3.14.1.123",
     ]
     print(len(ips))
-    result=execute_all(ips)
-    print(result)
+    result = execute_all(ips)
+    print('\n'.join(result))
     end_time = time.perf_counter()
-    print('花费时间 {} seconds'.format(end_time - start_time))
+    print('花费时间 {} 秒'.format(end_time - start_time))
