@@ -48,7 +48,7 @@ def execute_all(lines):
 
 
 if __name__ == '__main__':
-    project_dir = os.path.dirname(os.path.abspath(__file__))
+    project_dir = os.path.abspath(os.path.dirname(__file__) + '/../')
     start_time = time.perf_counter()
     ips = [
         "114.114.114.114",
