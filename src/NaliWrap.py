@@ -12,8 +12,6 @@ import traceback
 from datetime import datetime
 
 
-
-
 def record_log(log):
     with open(project_dir + "/naliwrap.log", "a+") as f:
         f.write(log + "\n")
@@ -34,28 +32,31 @@ def cmd_exec(cmd):
 def match(message):
     search = re.search("(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", message)
     result = {}
-    if search is not None:
+    if search:
         ip = search.group(1)
         cmd = f"{project_dir}/tools/nali-linux-amd64-v0.4.2 {ip}"
+        record_log(cmd)
         output = cmd_exec(cmd)
+        record_log(output + '\n')
         addr = output.replace(ip, '')
-        if output is not None:
+        if addr:
             result['ip'] = ip
             result['addr'] = addr.strip()
-            result['origin'] = output
+            result['origin'] = output.strip()
 
     return result
 
 
 def main():
-    print("HTTP/1.1 200", end="\r\n")
-    print("Content-Type:application/json;charset=utf-8", end="\r\n")
-    # print("Content-Type:text/html;charset=utf-8", end="\r\n")
-    print("", end="\r\n")
+    print("HTTP/1.0 200\r\n", end="")
 
+    print("content-type: application/javascript; charset=utf-8\r\n", end="")
+    # print("Content-Type:text/html;charset=utf-8", end="\r\n")
+    print('\r\n\r\n', end='')
     req = sys.stdin.readline()
     # req='/?ip=8.8.8.8'
     message = req.strip()
+    record_log(message)
     info = match(message)
     result = {
         'code': 404,
@@ -70,11 +71,13 @@ def main():
         result['origin'] = info['origin']
         result["message"] = "ok"
 
-    print(json.dumps(result, ensure_ascii=False), end="\r\n")
+    print(json.dumps(result, ensure_ascii=False), end="\r\n\r\n")
 
 
 if __name__ == '__main__':
-    project_dir = os.path.abspath(os.path.dirname(__file__)+"/../")
+
+    project_dir = os.path.abspath(os.path.dirname(__file__) + '/../')
+    record_log(project_dir)
     try:
         process_ids = 'ppid:{},pid:{},uid:{}'.format(os.getppid(), os.getpid(), os.getuid())
         request_time = ":request_time:" + datetime.strftime(datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ")

@@ -8,4 +8,5 @@ __DIR__=$(
 )
 cd ${__DIR__}
 
-socat -d -d  TCP-LISTEN:8080,fork,reuseaddr,reuseport SYSTEM:"python3 src/NaliWrap.py"
+socat -d -d -d  TCP-LISTEN:8080,fork,reuseaddr SYSTEM:"python3 src/NaliWrap.py"
+# ,crlf,crlf
