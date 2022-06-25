@@ -34,7 +34,7 @@ nali-linux-amd64-v0.4.2 update
 ```
 
 
-## 使用 supervisor 或者  systemd 或者 docker 守护运行
+## 使用 supervisor 或者  systemd 或者 docker 守护运行 
 
 
 ## 参考

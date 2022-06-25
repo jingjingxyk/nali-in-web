@@ -19,6 +19,16 @@ def get_cmd(line):
             cmd = f'{project_dir}/tools/nali-linux-amd64-v0.4.2 {ip}'
     return cmd
 
+def execute_one2(line=''):
+    print(line)
+    try:
+        res = subprocess.check_call(['ls', '?'])
+        print('res:', res)
+    except subprocess.CalledProcessError as exc:
+        print('returncode:', exc.returncode)
+        print('cmd:', exc.cmd)
+        print('output:', exc.output)
+
 
 def execute_one(line):
     cmd = get_cmd(line)
@@ -68,6 +78,8 @@ if __name__ == '__main__':
         "3.14.1.123",
     ]
     print(len(ips))
+    # 去重
+    ips = list(set(ips))
     result = execute_all(ips)
     print('\n'.join(result))
     end_time = time.perf_counter()
