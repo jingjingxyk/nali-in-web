@@ -30,20 +30,24 @@ def cmd_exec(cmd):
 
 
 def match(message):
-    search = re.search("(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", message)
-    result = dict()
+    search = re.findall("(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", message)
+    result = []
     if search:
-        ip = search.group(1)
+        ip = ' '.join(search)
         cmd = f"{project_dir}/tools/nali-linux-amd64-v0.4.2 {ip}"
         record_log(cmd)
         output = cmd_exec(cmd)
-        record_log(output + '\n')
-        addr = output.replace(ip, '')
-        if addr:
-            result['ip'] = ip
-            result['addr'] = addr.strip()
-            result['origin'] = output.strip()
-
+        arr = output.split("]  ")
+        arr = [(el + ']') for el in arr]
+        for el in arr:
+            new_arr = el.split(" [")
+            new_arr[1] = '[' + new_arr[1]
+            new_arr[1] = new_arr[1].lstrip('[').rstrip(']')
+            result.append({
+                'ip': new_arr[0],
+                "addr": new_arr[1].strip(),
+                "origin": el
+            })
     return result
 
 
@@ -57,18 +61,16 @@ def main():
     # req='/?ip=8.8.8.8'
     message = req.strip()
     record_log(message)
-    info = match(message)
+    data = match(message)
     result = {
-        'code': 404,
+        "code": 200,
+        "data": [],
         "request_uri": message,
         "request_datetime": datetime.strftime(datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ"),
         "message": "no data"
     }
-    if info:
-        result["code"] = 200
-        result["ip"] = info["ip"]
-        result["addr"] = info["addr"]
-        result['origin'] = info['origin']
+    if data:
+        result["data"] = data
         result["message"] = "ok"
 
     print(json.dumps(result, ensure_ascii=False)+"\r\n\r\n", end='')
