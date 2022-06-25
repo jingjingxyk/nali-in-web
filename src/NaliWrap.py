@@ -37,7 +37,6 @@ def match(message):
         cmd = f"{project_dir}/tools/nali-linux-amd64-v0.4.2 {ip}"
         record_log(cmd)
         output = cmd_exec(cmd)
-
         arr = output.split("]  ")
         arr = [(el + ']') for el in arr]
         for el in arr:
