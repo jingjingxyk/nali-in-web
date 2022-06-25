@@ -1,5 +1,5 @@
 # 简易 nali web 工具
-> 为[nali](https://github.com/zu1k/nali.git) 增加http 查询接口
+> 为`[nali](https://github.com/zu1k/nali.git) `增加http 查询接口
 
 ## 启动
 
