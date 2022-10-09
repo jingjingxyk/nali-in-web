@@ -3,3 +3,4 @@ tools/naliwrap.log
 .idea
 naliwrap.log
 /tmp
+venv/
