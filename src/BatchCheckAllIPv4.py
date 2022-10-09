@@ -175,3 +175,8 @@ if __name__ == '__main__':
 
     end_time = time.perf_counter()
     print('花费时间 {} 秒'.format(end_time - start_time))
+
+    # start=datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    # https://github.com/tankren/GoldenTax_Djh_Autofill/blob/main/Auto_mapping.py
+
+    # subprocess.Popen site:chromium.googlesource.com

@@ -51,3 +51,8 @@ nali-linux-amd64-v0.4.2 update
 ## 参考
 1. [nali](https://github.com/zu1k/nali.git)
 2. [ip-database](https://github.com/itbdw/ip-database.git)
+3. [IP地址批量查询](http://www.1234i.com/)
+
+```text
+/venv/bin/python3 /venv/bin/gunicorn --timeout 86400 --bind [::]:80 -w 1 --threads 25 --access-logfile - -c gunicorn_config.py
+```

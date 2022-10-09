@@ -10,7 +10,9 @@ import re
 import fileinput
 import traceback
 from datetime import datetime
-
+import asyncio
+import tornado.web
+import urllib
 
 def record_log(log):
     with open(project_dir + "/naliwrap.log", "a+") as f:
@@ -34,47 +36,85 @@ def match(message):
     result = []
     if search:
         ip = ' '.join(search)
-        cmd = f"{project_dir}/tools/nali-linux-amd64-v0.4.2 {ip}"
+        cmd = f"{project_dir}/tools/nali-linux-amd64-v0.5.3 {ip}"
         record_log(cmd)
+        print('===============')
         output = cmd_exec(cmd)
-        arr = output.split("]  ")
-        arr = [(el + ']') for el in arr]
+        print(output)
+        print('===============')
+        arr = output.split("  ")
+        print(arr)
+        print('===============')
+        arr = [(el.strip()) for el in arr]
         for el in arr:
             new_arr = el.split(" [")
-            new_arr[1] = '[' + new_arr[1]
-            new_arr[1] = new_arr[1].lstrip('[').rstrip(']')
+            print(new_arr)
+            new_arr[1] = new_arr[1].rstrip(']')
             result.append({
                 'ip': new_arr[0],
                 "addr": new_arr[1].strip(),
-                "origin": el
+                "origin": el.strip()
             })
     return result
 
 
-def main():
-    print("HTTP/1.0 200\r\n", end="")
 
-    print("content-type: application/json; charset=utf-8\r\n", end="")
-    # print("Content-Type:text/html;charset=utf-8", end="\r\n")
-    print('\r\n\r\n', end='')
-    req = sys.stdin.readline()
-    # req='/?ip=8.8.8.8'
-    message = req.strip()
-    record_log(message)
-    data = match(message)
-    result = {
-        "code": 200,
-        "data": [],
-        "request_uri": message,
-        "request_datetime": datetime.strftime(datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ"),
-        "message": "no data"
-    }
-    if data:
-        result["data"] = data
-        result["message"] = "ok"
 
-    print(json.dumps(result, ensure_ascii=False) + "\r\n\r\n", end='')
+class MainHandler(tornado.web.RequestHandler):
+    def options(self):
+        self.set_status(200)
+        self.set_header('Access-Control-Allow-Credentials', 'true')
+        origin = ''
+        if 'Origin' in self.request.headers:
+            origin = self.request.headers['Origin']
+        self.set_header('Access-Control-Allow-Origin', origin)
+        self.set_header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,CONNECT,OPTIONS,TRACE,PATCH')
+        self.set_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
 
+    def get(self):
+        print(self.request)
+        print(self.request.headers)
+        self.set_status(200)
+        self.set_header("Content-type", "application/json")
+        self.set_header('Access-Control-Allow-Credentials', 'true')
+        origin = ''
+        if 'Origin' in self.request.headers:
+            origin = self.request.headers['Origin']
+        self.set_header('Access-Control-Allow-Origin', origin)
+        self.set_header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,CONNECT,OPTIONS,TRACE,PATCH')
+        self.set_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
+        response = {
+            "code": 200,
+            "message": "no data",
+            "data":[],
+            "request_uri": self.request.path+self.request.query,
+            "request_datetime": datetime.strftime(datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ"),
+        }
+
+        print(self.request.path)
+        print(self.request.query)
+
+        if len(self.request.path)>4:  # 如果带有参数
+            params = urllib.parse.parse_qs(self.request.query)
+            print(params)
+            namespace = params["namespace"][0] if "namespace" in params else None
+            print(namespace)
+            response['data']=match(self.request.path)
+
+
+        self.write(json.dumps(response).encode())
+
+def make_app():
+    return tornado.web.Application([
+        (r"/.*", MainHandler)
+    ])
+
+
+
+async def main():
+    app = make_app()
+    app.listen(33348)
+    await asyncio.Event().wait()
 
 if __name__ == '__main__':
 
@@ -84,7 +124,7 @@ if __name__ == '__main__':
         process_ids = 'ppid:{},pid:{},uid:{}'.format(os.getppid(), os.getpid(), os.getuid())
         request_time = ":request_time:" + datetime.strftime(datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ")
         record_log(process_ids + " " + request_time)
-        main()
+        asyncio.run(main())
     except Exception as e:
         record_log(repr(e))
         with open(project_dir + "/naliwrap.log", "a+") as f:

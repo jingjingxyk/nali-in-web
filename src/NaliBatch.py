@@ -46,7 +46,8 @@ def execute_one(line):
 # 并发编程
 def execute_all(lines):
     res = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
+   # with concurrent.futures.ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
         to_do = []
         for line in lines:
             future = executor.submit(execute_one, line)
