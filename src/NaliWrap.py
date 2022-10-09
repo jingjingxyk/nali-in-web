@@ -14,6 +14,7 @@ import asyncio
 import tornado.web
 import urllib
 
+
 def record_log(log):
     with open(project_dir + "/naliwrap.log", "a+") as f:
         f.write(log + "\n")
@@ -58,8 +59,6 @@ def match(message):
     return result
 
 
-
-
 class MainHandler(tornado.web.RequestHandler):
     def options(self):
         self.set_status(200)
@@ -86,23 +85,23 @@ class MainHandler(tornado.web.RequestHandler):
         response = {
             "code": 200,
             "message": "no data",
-            "data":[],
-            "request_uri": self.request.path+self.request.query,
+            "data": [],
+            "request_uri": self.request.path + self.request.query,
             "request_datetime": datetime.strftime(datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ"),
         }
 
         print(self.request.path)
         print(self.request.query)
 
-        if len(self.request.path)>4:  # 如果带有参数
+        if len(self.request.path) > 4:  # 如果带有参数
             params = urllib.parse.parse_qs(self.request.query)
             print(params)
             namespace = params["namespace"][0] if "namespace" in params else None
             print(namespace)
-            response['data']=match(self.request.path)
+            response['data'] = match(self.request.path)
 
+        self.write(json.dumps(response, ensure_ascii=False))
 
-        self.write(json.dumps(response).encode())
 
 def make_app():
     return tornado.web.Application([
@@ -110,11 +109,11 @@ def make_app():
     ])
 
 
-
 async def main():
     app = make_app()
-    app.listen(33348)
+    app.listen(8080)
     await asyncio.Event().wait()
+
 
 if __name__ == '__main__':
 
@@ -129,8 +128,7 @@ if __name__ == '__main__':
         record_log(repr(e))
         with open(project_dir + "/naliwrap.log", "a+") as f:
             traceback.print_tb(sys.exc_info()[2], file=f)
-
-            #logger.error(msg, exc_info=True) / logging.error(msg, exc_info=True)
+            # logger.error(msg, exc_info=True) / logging.error(msg, exc_info=True)
             # logger.info(f'exception: {traceback.format_exc()}')
         result = {
             'code': 500,
