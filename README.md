@@ -15,22 +15,23 @@ http://localhost:8080/nali-ip/101.36.109.208,100.1.1.1
 ## response
 ```json
 {
-  "code": 200, 
-  "data": [
-    {
-      "ip": "101.36.109.208",
-      "addr": "湖北省 教育网", 
-      "origin": "101.36.109.208 [湖北省 教育网]"
-    }, 
-    {
-      "ip": "100.1.1.1", "addr": "印度]",
-      "origin": "100.1.1.1 [印度]]"
-    }
-  ], 
-  "request_uri": "GET /nali-ip/101.36.109.208,100.1.1.1 HTTP/1.1", 
-  "request_datetime": "2022-06-25T12:03:13Z", "message": "ok"
+    "code": 200,
+    "message": "no data",
+    "data": [
+        {
+            "ip": "101.36.109.208",
+            "addr": "香港 UCloud",
+            "origin": "101.36.109.208 [香港 UCloud]"
+        },
+        {
+            "ip": "100.1.1.1",
+            "addr": "印度",
+            "origin": "100.1.1.1 [印度]"
+        }
+    ],
+    "request_uri": "/nali-ip/101.36.109.208,100.1.1.1",
+    "request_datetime": "2022-10-09T09:38:22Z"
 }
-
 ```
 
 ## 批量获取 ip地址信息
