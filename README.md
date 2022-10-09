@@ -42,7 +42,7 @@ python3 src/NaliBatch.py
 ```
 ## 更新 IP 数据库
 ```shell 
-nali-linux-amd64-v0.4.2 update 
+nali-linux-amd64-v0.5.3 update 
 ```
 
 
