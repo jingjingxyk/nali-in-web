@@ -18,6 +18,6 @@ PROXY_URL=${2:+'http://127.0.0.1:8015'}
 export http_proxy=$PROXY_URL
 export https_proxy=$PROXY_URL
 
-curl -LO https://github.com/zu1k/nali/releases/download/v0.5.3/nali-linux-amd64-v0.5.3.gz
-gzip -d nali-linux-amd64-v0.5.3.gz
-chmod a+x nali-linux-amd64-v0.5.3
+curl -LO https://github.com/zu1k/nali/releases/download/v0.7.0/nali-linux-amd64-v0.7.0.gz
+gzip -d nali-linux-amd64-v0.7.0.gz
+chmod a+x nali-linux-amd64-v0.7.0
