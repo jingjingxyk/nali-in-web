@@ -37,7 +37,7 @@ def match(message):
     result = []
     if search:
         ip = ' '.join(search)
-        cmd = f"{project_dir}/tools/nali-linux-amd64-v0.5.3 {ip}"
+        cmd = f"{project_dir}/tools/nali-linux-amd64-v0.7.0 {ip}"
         record_log(cmd)
         print('===============')
         output = cmd_exec(cmd)
